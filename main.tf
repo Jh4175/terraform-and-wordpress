@@ -15,6 +15,13 @@ data "aws_security_group" "allow_http" {
   }
 }
 
+terraform{
+  backend "s3" {
+    bucket       = "hjybucket"
+    key          = "terraform.tfstate"
+    region       = "us-east-1"
+  }
+}
 
 # EC2 instance resource definition
 resource "aws_instance" "my_server" {
