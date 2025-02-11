@@ -8,6 +8,14 @@ locals {
     aws_key = "<YOUR-KEY-NAME>"   # SSH key pair name for EC2 instance access
 }
 
+data "aws_security_group" "allow_http" {
+  filter {
+    name   = "group-name"
+    values = ["allow_http"]
+  }
+}
+
+
 # EC2 instance resource definition
 resource "aws_instance" "my_server" {
    ami           = data.aws_ami.amazonlinux.id  # Use the AMI ID from the data source
@@ -19,6 +27,11 @@ resource "aws_instance" "my_server" {
    tags = {
      Name = "my ec2"
    }                  
+}
+resource "aws_instance" "web" {
+  ami           = data.aws_ami.amazonlinux.id
+  instance_type = var.instance_type
+  vpc_security_group_ids = [data.aws_security_group.allow_http.id]
 }
 
 
